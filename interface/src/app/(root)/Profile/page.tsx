@@ -186,8 +186,8 @@ const BlockchainLearningProfile = () => {
                 <div className="p-6">
                   <h3 className="font-heading text-lg mb-2">{course.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Completed on {new Date(course.completionDate).toLocaleDateString()}
-                  </p>
+  Completed on {new Date(course.completionDate).toISOString().split('T')[0]}
+</p>
                   <div className="flex items-center space-x-4">
                     <button className="flex items-center space-x-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg">
                       <FiDownload />
