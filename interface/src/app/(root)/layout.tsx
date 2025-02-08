@@ -9,7 +9,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Header />
         <div className="mt-10 pb-10">{children}</div>
       </div>
-      <Footer />
     </main>
   );
 };

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-    darkMode: ["class"],
+    darkMode: "class",
     content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,6 +9,10 @@ export default {
   ],
   theme: {
   	extend: {
+		fontFamily: {
+			quantico: "var(--font-quantico)", // Quantico for headings
+			saira: "var(--font-saira)", // Saira Stencil One for subheadings
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
