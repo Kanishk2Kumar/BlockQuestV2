@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const words = "In a galaxy torn by an Interstellar Blockchain War, rival factions fight for control over the Blockchain Nebula. Each planet, powered by a different blockchain, holds the key to ultimate energy source. As a Cadet of the Intergalactic Resistance, your mission is to conquer challenges, master blockchain technology, and reclaim the universe from centralization’s grasp. The fate of the decentralized world is in your hands!"
 
-export default function Hero() {
+const Hero = () => {
   return (
     <section className="relative flex flex-col md:flex-row items-center justify-between w-full min-h-[85vh] bg-black">
       {/* Left Content */}
@@ -39,3 +39,4 @@ export default function Hero() {
     </section>
   );
 }
+export default Hero;
