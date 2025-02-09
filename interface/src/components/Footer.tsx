@@ -1,104 +1,53 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image'; // Import the Image component from Next.js
-import { Facebook, Twitter, Instagram, Github } from 'lucide-react'; // or any other icon library
+import Link from "next/link";
+import { buttonVariants } from "./ui/button";
+import { HeartIcon } from "lucide-react";
+import Image from "next/image";
 
-const Footer = () => {
+export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white pt-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start">
-          {/* Logo */}
-          <div className="mb-8 md:mb-0">
-            <Link href="/">
-              {/* Replace with your logo image */}
-              <Image
-                src="/logo.png" // Path to your logo image in the public folder
-                alt="Your Logo"
-                width={150} // Set the desired width
-                height={50} // Set the desired height
-                className="object-contain" // Ensures the image scales properly
-              />
-            </Link>
-          </div>
-
-          {/* Quick Links */}
-          <div className="mb-8 md:mb-0 text-center md:text-left">
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="hover:text-cyan-400 transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/all-courses" className="hover:text-cyan-400 transition-colors">
-                  All Courses
-                </Link>
-              </li>
-              <li>
-                <Link href="/AI-Teacher" className="hover:text-cyan-400 transition-colors">
-                  AI Teacher
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Social Media */}
-          <div className="mb-8 md:mb-0">
-            <h3 className="text-lg font-semibold mb-4 text-center md:text-left">
-              Follow Us
-            </h3>
-            <div className="flex justify-center md:justify-start space-x-6">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cyan-400 transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook size={24} />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cyan-400 transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter size={24} />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cyan-400 transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram size={24} />
-              </a>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cyan-400 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github size={24} />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="border-t border-gray-800 mt-8 py-6 text-center">
-          <p className="text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} Your Company Name. All rights reserved.
-          </p>
+    <footer className="border-t w-full h-16">
+      <div className="container flex items-center sm:justify-between justify-center sm:gap-0 gap-4 h-full text-muted-foreground text-md flex-wrap sm:py-0 py-3 max-sm:px-4">
+      <div className="flex items-center gap-3 ml-12">
+        <p className="flex items-center text-center">
+          Built by{" "}
+          <Link
+            className="underline underline-offset-2 flex items-center"
+            target="_blank"
+            href="https://github.com/Kanishk2Kumar"
+          >
+            <span className="ml-1 font-saira">Team Optimus</span>
+            <Image src="/images/Teamlogo.png" alt="Team Logo" height={25} width={25} className="ml-2" />
+          </Link>
+        </p>
+      </div>
+        <div className="gap-4 hidden md:flex mr-12">
+          <FooterButtons />
+          <Link href="https://www.buymeacoffee.com/" target="_blank">
+          <Image
+            src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=m3hu1&button_colour=9333EA&font_colour=FFFFFF&font_family=Inter&outline_colour=000000&coffee_colour=ffffff"
+            alt="Buy Me A Coffee"
+            width={171}
+            height={1}
+            unoptimized
+          />
+          </Link>
         </div>
       </div>
     </footer>
   );
-};
+}
 
-export default Footer;
+export function FooterButtons() {
+  return (
+    <>
+      <Link
+        href="https://github.com/sponsors/Kanishk2Kumar"
+        target="_blank"
+        className={buttonVariants({ variant: "outline" })}
+      >
+        <HeartIcon className="h-4 w-4 mr-2 text-red-600 fill-current" />
+        Sponsor Us
+      </Link>
+    </>
+  );
+}
