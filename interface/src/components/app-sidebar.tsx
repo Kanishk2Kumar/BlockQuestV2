@@ -176,7 +176,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className="bg-black">
+      <SidebarContent className="bg-black text-gray-300">
         <SidebarGroup>
           <SidebarMenu>
             {data.navMain.map((item) => (
