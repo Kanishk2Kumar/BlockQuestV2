@@ -1,108 +1,110 @@
 "use client";
-import React, { useState } from "react";
-import CourseCard from "../../../components/Course-Card";
 
-const categories = ["Ethereum", "Solana", "Polygon", "Hyperledger"];
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from "next/image";
 
-// Course data categorized
-const courseData = {
-  Ethereum: [
-    {
-      title: "Solidity: Beginner to Intermediate Smart Contracts",
-      description: "Get up to speed with the basics of Solidity.",
-      level: ["Solidity", "Beginner", "Intermediate"],
-      progress: 30,
-      image: "ethereum.svg",
-    },
-    {
-      title: "Advanced Ethereum Development",
-      description: "Deep dive into Ethereum smart contract development.",
-      level: ["Ethereum", "Advanced"],
-      progress: 50,
-      image: "ethereum.svg",
-    },
-  ],
-  Solana: [
-    {
-      title: "Solana Smart Contracts with Rust",
-      description: "Learn how to build smart contracts using Rust for Solana.",
-      level: ["Solana", "Rust", "Beginner"],
-      progress: 20,
-      image: "solana.svg",
-    },
-    {
-      title: "Building dApps on Solana",
-      description: "Create decentralized applications on the Solana blockchain.",
-      level: ["Solana", "dApps"],
-      progress: 40,
-      image: "solana.svg",
-    },
-  ],
-  Polygon: [
-    {
-      title: "Deploying Smart Contracts on Polygon",
-      description: "Learn how to deploy and interact with smart contracts on Polygon.",
-      level: ["Polygon", "Smart Contracts"],
-      progress: 60,
-      image: "polygon.svg",
-    },
-    {
-      title: "Polygon dApp Development",
-      description: "Build scalable decentralized applications on Polygon.",
-      level: ["Polygon", "dApps"],
-      progress: 35,
-      image: "polygon.svg",
-    },
-  ],
-  Hyperledger: [
-    {
-      title: "Introduction to Hyperledger Fabric",
-      description: "Explore enterprise blockchain solutions with Hyperledger Fabric.",
-      level: ["Hyperledger", "Beginner"],
-      progress: 45,
-      image: "hyperledger.svg",
-    },
-    {
-      title: "Hyperledger Chaincode Development",
-      description: "Learn how to write chaincode for Hyperledger applications.",
-      level: ["Hyperledger", "Chaincode"],
-      progress: 55,
-      image: "hyperledger.svg",
-    },
-  ],
-};
+const courses = [
+  {
+    id: "1",
+    title: "Solidity Basics",
+    description: "Learn the fundamentals of Solidity and smart contract development.",
+    image: "/images/Solidity.png",
+    enrolled: true,
+    duration: "6 hours",
+    author: "John Doe",
+  },
+  {
+    id: "2",
+    title: "Mastering Solana",
+    description: "Deep dive into Solana development and Rust programming.",
+    image: "/images/Solidity.png",
+    enrolled: false,
+    duration: "8 hours",
+    author: "Jane Smith",
+  },
+  {
+    id: "3",
+    title: "Aptos Smart Contracts",
+    description: "Explore Move language and Aptos blockchain.",
+    image: "/images/Solidity.png",
+    enrolled: true,
+    duration: "10 hours",
+    author: "Alice Johnson",
+  },
+  {
+    id: "4",
+    title: "Solidity Intermediate",
+    description: "Learn how to make of smart contract in soldity along with projects development.",
+    image: "/images/Solidity.png",
+    enrolled: true,
+    duration: "8 hours",
+    author: "Kanishk Kumar",
+  },
+];
 
-const AllCourses = () => {
-  const [selectedCategory, setSelectedCategory] = useState("Ethereum");
-  const courses = courseData[selectedCategory]; // Get courses based on selected category
+export default function AllCourses() {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const filteredCourses = courses.filter((course) =>
+    course.title.toLowerCase().includes(search.toLowerCase()) &&
+    (filter === "all" || course.title.toLowerCase().includes(filter))
+  );
 
   return (
-    <div className="bg-gray-1000 min-h-screen p-10">
-      <h1 className="text-3xl font-bold text-center mb-10">All Courses</h1>
-
-      {/* Category Selection Buttons */}
-      <div className="flex justify-center gap-4 mb-6">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-6 py-2 rounded-lg text-white ${
-              selectedCategory === category ? "bg-blue-600" : "bg-gray-700 hover:bg-gray-600"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
+    <div className="bg-black min-h-screen text-white px-24 py-2">
+      <h1 className="text-4xl font-bold mb-4 text-center font-quantico underline decoration-dashed decoration-purple-500">
+        All Courses
+      </h1>
+      <div className="flex gap-4 my-6">
+        <Input
+          placeholder="Search Courses..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border-gray-500 text-white min-w-[130vh]"
+        />
+        <Select onValueChange={setFilter}>
+          <SelectTrigger className="border-gray-400 text-white">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent className="border-gray-700 text-white">
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="solidity">Solidity</SelectItem>
+            <SelectItem value="solana">Solana</SelectItem>
+            <SelectItem value="aptos">Aptos</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-
-      {/* Grid layout for course cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
-        {courses.map((course, index) => (
-          <CourseCard key={index} {...course} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {filteredCourses.map((course) => (
+          <Card key={course.id} className="bg-transparent border-gray-700 p-4 flex items-center min-h-52">
+            <div className="w-1/3 relative">
+              <Image
+                src={course.image}
+                alt={course.title}
+                width={200}
+                height={200}
+                className="rounded-md"
+              />
+            </div>
+            <div className="w-2/3 pl-4">
+              <h2 className="text-xl font-semibold">{course.title}</h2>
+              <p className="text-gray-400 text-sm mb-2">{course.description}</p>
+              <p className="text-gray-400 text-sm">Duration: {course.duration}</p>
+              <div className="flex items-center justify-between mt-4">
+                <p className="text-sm font-bold">Author: <span className="text-purple-500">{course.author}</span></p>
+                <Button className="bg-white text-black hover:bg-gray-300 font-saira border-purple-500 border-2">
+                  {course.enrolled ? "Continue Journey" : "Start Your Journey"}
+                </Button>
+              </div>
+            </div>
+          </Card>
         ))}
       </div>
     </div>
   );
-};
-
-export default AllCourses;
+}
