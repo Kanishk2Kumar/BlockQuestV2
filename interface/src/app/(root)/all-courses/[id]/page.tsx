@@ -14,7 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-export default function ID() {
+export default function Page() {
   return (
     <SidebarProvider>
       <AppSidebar className="mt-20"/>
