@@ -1,6 +1,8 @@
 "use client"
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -49,7 +51,9 @@ export default function Page() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-4 shadow-lg overflow-auto">
-            <ReactMarkdown>{readme}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+              {readme}
+            </ReactMarkdown>
           </div>
         </div>
       </SidebarInset>
