@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
 import localFont from "next/font/local";
+import { Web3Provider, Web3Context } from "../contexts/Web3Context";
 
 // Load Space Game Fonts
 const quantico = localFont({
@@ -25,7 +26,9 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en" suppressHydrationWarning className={`${quantico.variable} ${sairaStencil.variable}`}>
+      <Web3Provider>
       <body className="bg-black text-white">{children}</body>
+      </Web3Provider>
     </html>
   );
 };

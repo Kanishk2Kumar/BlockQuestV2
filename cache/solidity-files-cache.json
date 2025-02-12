@@ -6,12 +6,12 @@
       "contentHash": "869147203bc4bc3ae8e456a5085ef7fb",
       "sourceName": "contracts/BlockQuest.sol",
       "solcConfig": {
-        "version": "0.8.28",
+        "version": "0.8.24",
         "settings": {
           "evmVersion": "paris",
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {

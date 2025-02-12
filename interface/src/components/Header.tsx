@@ -3,19 +3,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState, useContext } from "react";
 import { Button } from "./ui/button";
-import { useEffect, useRef, useState } from "react";
+import { Web3Context } from "@/contexts/Web3Context";
 import clsx from "clsx"; // Ensure you have this installed: `npm install clsx`
 
 const Header = () => {
-  const pathname = usePathname(); // Get current route
+  const { account, connectWallet, disconnectWallet } = useContext(Web3Context);
+  const pathname = usePathname();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (pathname === "/") {
-      audioRef.current = new Audio("/audio/bgAud1.mp3"); // Replace with your actual audio file
+      audioRef.current = new Audio("/audio/bgAud1.mp3");
       audioRef.current.loop = true;
     }
 
@@ -100,7 +102,13 @@ const Header = () => {
             </li>
           )}
           <li>
-            <Button>Connect Wallet</Button>
+            {account ? (
+              <Button onClick={disconnectWallet} variant="outline">
+                {`${account.slice(0, 6)}...${account.slice(-4)}`}
+              </Button>
+            ) : (
+              <Button onClick={connectWallet}>Connect Wallet</Button>
+            )}
           </li>
         </ul>
       </header>
