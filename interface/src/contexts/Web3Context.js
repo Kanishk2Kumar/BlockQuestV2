@@ -1,38 +1,43 @@
-"use client"
-// src/contexts/Web3Context.js
+"use client";
 import React, { createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
-import MetacircleABI from "../ABI/BlockQuest.json";
+import BlockQuest from "../ABI/BlockQuest.json";
+
 export const Web3Context = createContext();
 
-// Initialize contract (replace with your contract address and ABI)
-// Initialize contract (replace with your contract address and ABI)
 const CONTRACT_ADDRESS = "0x29708D6dA847C924dDB3e7441a3799C25264286F";
-const contractABI = MetacircleABI.abi;
+
 export const Web3Provider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Track loading state
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
       try {
-        // Request accounts, which will trigger MetaMask popup
+        setIsLoading(true);
         const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        
-        if (accounts.length === 0) return; // If no account is selected, return
-        
+        if (accounts.length === 0) {
+          throw new Error("No accounts found. Please ensure MetaMask is connected.");
+        }
+
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        const address = await signer.getAddress(); // Explicitly fetch the address
-  
+        const address = await signer.getAddress();
+
         setAccount(address);
         setProvider(provider);
-  
-        const socialMediaContract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
-        setContract(socialMediaContract);
+        setSigner(signer);
+
+        const contractInstance = new ethers.Contract(CONTRACT_ADDRESS, BlockQuest.abi, signer);
+        setContract(contractInstance);
       } catch (error) {
         console.error("Error connecting to MetaMask:", error);
+        alert(`Error: ${error.message}`);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("Please install MetaMask to use this application");
@@ -43,13 +48,14 @@ export const Web3Provider = ({ children }) => {
     setAccount(null);
     setContract(null);
     setProvider(null);
+    setSigner(null);
   };
 
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
         if (accounts.length > 0) {
-          setAccount(accounts[0]);
+          connectWallet();
         } else {
           disconnectWallet();
         }
@@ -58,9 +64,7 @@ export const Web3Provider = ({ children }) => {
   }, []);
 
   return (
-    <Web3Context.Provider
-      value={{ account, contract, provider, connectWallet, disconnectWallet }}
-    >
+    <Web3Context.Provider value={{ account, contract, provider, signer, isLoading, connectWallet, disconnectWallet }}>
       {children}
     </Web3Context.Provider>
   );

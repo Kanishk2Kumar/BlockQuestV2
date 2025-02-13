@@ -1,58 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { Web3Context } from "@/contexts/Web3Context";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
 
-const courses = [
-  {
-    id: "1",
-    title: "Solidity Basics",
-    description: "Learn the fundamentals of Solidity and smart contract development.",
-    image: "/images/Solidity.png",
-    enrolled: true,
-    duration: "6 hours",
-    author: "John Doe",
-  },
-  {
-    id: "2",
-    title: "Mastering Solana",
-    description: "Deep dive into Solana development and Rust programming.",
-    image: "/images/Solidity.png",
-    enrolled: false,
-    duration: "8 hours",
-    author: "Jane Smith",
-  },
-  {
-    id: "3",
-    title: "Aptos Smart Contracts",
-    description: "Explore Move language and Aptos blockchain.",
-    image: "/images/Solidity.png",
-    enrolled: true,
-    duration: "10 hours",
-    author: "Alice Johnson",
-  },
-  {
-    id: "4",
-    title: "Solidity Intermediate",
-    description: "Learn how to make of smart contract in soldity along with projects development.",
-    image: "/images/Solidity.png",
-    enrolled: true,
-    duration: "8 hours",
-    author: "Kanishk Kumar",
-  },
-];
+interface Course {
+  courseName: string;
+  durationInHours: number;
+  difficulty: string;
+  authorName: string;
+  readmeLink: string;
+}
 
 export default function AllCourses() {
+  const { contract } = useContext(Web3Context);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
 
-  const filteredCourses = courses.filter((course) =>
-    course.title.toLowerCase().includes(search.toLowerCase()) &&
-    (filter === "all" || course.title.toLowerCase().includes(filter))
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (!contract) return;
+      try {
+        const coursesData: Course[] = await contract.getAllCourses();
+        setCourses(coursesData);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, [contract]);
+
+  const filteredCourses = courses.filter(
+    (course) =>
+      course.courseName.toLowerCase().includes(search.toLowerCase()) &&
+      (filter === "all" || course.courseName.toLowerCase().includes(filter))
   );
 
   return (
@@ -80,25 +67,25 @@ export default function AllCourses() {
         </Select>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredCourses.map((course) => (
-          <Card key={course.id} className="bg-transparent border-gray-700 p-4 flex items-center min-h-52">
+        {filteredCourses.map((course, index) => (
+          <Card key={index} className="bg-transparent border-gray-700 p-4 flex items-center min-h-52">
             <div className="w-1/3 relative">
               <Image
-                src={course.image}
-                alt={course.title}
+                src="/images/Solidity.png"
+                alt={course.courseName}
                 width={200}
                 height={200}
                 className="rounded-md"
               />
             </div>
             <div className="w-2/3 pl-4">
-              <h2 className="text-xl font-semibold">{course.title}</h2>
-              <p className="text-gray-400 text-sm mb-2">{course.description}</p>
-              <p className="text-gray-400 text-sm">Duration: {course.duration}</p>
+              <h2 className="text-xl font-semibold">{course.courseName}</h2>
+              <p className="text-gray-400 text-sm mb-2">{course.readmeLink}</p>
+              <p className="text-gray-400 text-sm">Duration: {course.durationInHours} hours</p>
               <div className="flex items-center justify-between mt-4">
-                <p className="text-sm font-bold">Author: <span className="text-purple-500">{course.author}</span></p>
+                <p className="text-sm font-bold">Author: <span className="text-purple-500">{course.authorName}</span></p>
                 <Button className="bg-white text-black hover:bg-gray-300 font-saira border-purple-500 border-2">
-                  {course.enrolled ? "Continue Journey" : "Start Your Journey"}
+                  Start Your Journey
                 </Button>
               </div>
             </div>
