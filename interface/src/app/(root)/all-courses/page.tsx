@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Course {
   courseName: string;
@@ -14,13 +15,15 @@ interface Course {
   difficulty: string;
   authorName: string;
   readmeLink: string;
+  address?: string; // Some courses might not have an address
 }
 
 export default function AllCourses() {
-  const { contract } = useContext(Web3Context);
+  const { contract, account, enrollCourse } = useContext(Web3Context);
   const [courses, setCourses] = useState<Course[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -35,6 +38,24 @@ export default function AllCourses() {
 
     fetchCourses();
   }, [contract]);
+
+  const handleStartJourney = async (courseAddress?: string) => {
+    if (!account) {
+      alert("Connect wallet to continue");
+      return;
+    }
+    if (!courseAddress) {
+      alert("Course address is missing!");
+      return;
+    }
+
+    try {
+      await enrollCourse(courseAddress);
+      router.push(`/all-courses/${courseAddress}`);
+    } catch (error) {
+      console.error("Error enrolling:", error);
+    }
+  };
 
   const filteredCourses = courses.filter(
     (course) =>
@@ -68,7 +89,7 @@ export default function AllCourses() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredCourses.map((course, index) => (
-          <Card key={index} className="bg-transparent border-gray-700 p-4 flex items-center min-h-52">
+          <Card key={course.address || `course-${index}`} className="bg-transparent border-gray-700 p-4 flex items-center min-h-52">
             <div className="w-1/3 relative">
               <Image
                 src="/images/Solidity.png"
@@ -84,7 +105,10 @@ export default function AllCourses() {
               <p className="text-gray-400 text-sm">Duration: {course.durationInHours} hours</p>
               <div className="flex items-center justify-between mt-4">
                 <p className="text-sm font-bold">Author: <span className="text-purple-500">{course.authorName}</span></p>
-                <Button className="bg-white text-black hover:bg-gray-300 font-saira border-purple-500 border-2">
+                <Button
+                  className="bg-white text-black hover:bg-gray-300 font-saira border-purple-500 border-2"
+                  onClick={() => handleStartJourney(course.address)}
+                >
                   Start Your Journey
                 </Button>
               </div>

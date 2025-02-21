@@ -12,7 +12,7 @@ export const Web3Provider = ({ children }) => {
   const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // Track loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const connectWallet = async () => {
     if (typeof window.ethereum !== "undefined") {
@@ -51,6 +51,21 @@ export const Web3Provider = ({ children }) => {
     setSigner(null);
   };
 
+  const enrollCourse = async (courseAddress) => {
+    if (!contract || !account) {
+      alert("Connect wallet to enroll in a course.");
+      return;
+    }
+    try {
+      const tx = await contract.enrollCourse(courseAddress);
+      await tx.wait();
+      alert("Enrollment successful!");
+    } catch (error) {
+      console.error("Error enrolling in course:", error);
+      alert("Failed to enroll. Please try again.");
+    }
+  };
+
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", (accounts) => {
@@ -64,7 +79,7 @@ export const Web3Provider = ({ children }) => {
   }, []);
 
   return (
-    <Web3Context.Provider value={{ account, contract, provider, signer, isLoading, connectWallet, disconnectWallet }}>
+    <Web3Context.Provider value={{ account, contract, provider, signer, isLoading, connectWallet, disconnectWallet, enrollCourse }}>
       {children}
     </Web3Context.Provider>
   );
